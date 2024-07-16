@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/lib/api";
-import { Promotion } from "@/types/product";
+import { Promotion } from "@/types/brand";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
