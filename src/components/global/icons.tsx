@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+export type Icon = LucideIcon;
 import {
   Menu,
   X,
@@ -36,6 +37,7 @@ import {
   Tag,
   User,
   Dices,
+  LucideIcon,
 } from "lucide-react";
 
 export const Icons = {

@@ -18,21 +18,6 @@ export const dashboardConfig: DashboardConfig = {
       ],
     },
     {
-      title: "Admin",
-      links: [
-        {
-          icon: "user",
-          label: "Users",
-          href: "/dashboard/admin/user",
-        },
-        {
-          icon: "games",
-          label: "Games",
-          href: "/dashboard/admin/games",
-        },
-      ],
-    },
-    {
       title: "Account",
       links: [
         {
