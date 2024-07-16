@@ -27,7 +27,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             </Link>
           </div>
           <div className="flex-1 overflow-auto py-2">
-            <aside className="grid items-start px-4 text-sm font-medium">
+            <aside className="grid items-start px-4 text-sm font-medium h-full">
               <Navigation />
             </aside>
           </div>
