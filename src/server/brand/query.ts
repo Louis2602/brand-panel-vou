@@ -1,5 +1,4 @@
 import { axiosInstance } from "@/lib/api";
-import { IEmployeeAccountsRequest } from "@/types/user";
 import { useQuery } from "@tanstack/react-query";
 
 export const useAccounts = () => {
@@ -7,7 +6,7 @@ export const useAccounts = () => {
     queryKey: ["users"],
     queryFn: () =>
       axiosInstance
-        .get<IEmployeeAccountsRequest>("/admin/get-employees")
+        .get("/admin/get-employees")
         .then((res) => res.data.employees),
   });
 };
