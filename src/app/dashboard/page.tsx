@@ -2,13 +2,7 @@ import { BudgetChart } from "@/components/analytics/budget-chart";
 import { PromotionStatusChart } from "@/components/analytics/promotion-status-chart";
 import { CalendarDateRangePicker } from "@/components/analytics/date-range-picker";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Dashboard = () => {

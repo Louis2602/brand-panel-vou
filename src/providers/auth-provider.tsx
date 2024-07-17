@@ -6,12 +6,12 @@ import React, {
   useEffect,
 } from "react";
 import { axiosInstance } from "@/lib/api";
-import { User } from "@/types/user";
+import { Brand } from "@/types/brand";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 interface AuthContextProps {
-  user: User | null;
+  user: Brand | null;
   login: (brandName: string, password: string) => Promise<void>;
   register: (data: any) => Promise<void>;
   logout: () => Promise<void>;
@@ -23,18 +23,18 @@ const AuthContext = createContext({} as AuthContextProps);
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Brand | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const login = async (brandName: string, password: string) => {
     setLoading(true);
     try {
-      const res = await axiosInstance.post("/brands", {
+      const res = await axiosInstance.post("/brands/login", {
         brandName,
         password,
       });
-      const userData = res.data.user;
+      const userData = res.data?.data;
       if (userData) {
         setUser(userData);
         localStorage.setItem("auth", JSON.stringify(userData));
@@ -52,7 +52,27 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   const register = async (data: any) => {
-    console.log(data);
+    setLoading(true);
+    try {
+      const res = await axiosInstance.post("/brands", {
+        ...data,
+        latitude: 123,
+        longitude: 123,
+      });
+      const userData = res.data?.data;
+      if (userData) {
+        setUser(userData);
+        localStorage.setItem("auth", JSON.stringify(userData));
+      }
+      toast.success("Create brand successfully");
+
+      router.push("/dashboard");
+    } catch (error: any) {
+      console.error("Login failed:", error.message);
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = async () => {
@@ -60,10 +80,8 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     try {
       setUser(null);
       localStorage.removeItem("auth");
-
-      await axiosInstance.get("/logout");
       toast.success("Logout successfully");
-      router.push("/auth/login");
+      router.push("/auth/signin");
     } catch (error: any) {
       console.error("Logout failed:", error.response.data);
       toast.error("Failed to logout");
