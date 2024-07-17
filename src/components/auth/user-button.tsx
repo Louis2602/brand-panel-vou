@@ -1,30 +1,25 @@
+"use client";
+
 import Link from "next/link";
 import { generateFallback } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Brand } from "@/types/brand";
+import { Loader } from "../global/loader";
 
 interface UserButtonProps {
-  currentUser: {
-    imageUrl: string;
-    firstName: string;
-    lastName: string;
-  };
+  currentBrand: Brand;
 }
 
-export const UserButton = ({ currentUser }: UserButtonProps) => {
+export const UserButton = ({ currentBrand }: UserButtonProps) => {
+  console.log(currentBrand);
+  if (!currentBrand) {
+    return <Loader className="h-4 w-4" />;
+  }
   return (
     <Link href="/dashboard/settings">
       <Avatar className="cursor-pointer">
-        <AvatarImage
-          src={currentUser.imageUrl || ""}
-          alt={
-            `${currentUser.firstName} ${currentUser.lastName}` || "Unknown user"
-          }
-        />
-        <AvatarFallback>
-          {generateFallback(
-            `${currentUser.firstName} ${currentUser.lastName}` || "",
-          )}
-        </AvatarFallback>
+        <AvatarImage src={""} alt={`${currentBrand.name}`} />
+        <AvatarFallback>{generateFallback(currentBrand.name)}</AvatarFallback>
       </Avatar>
     </Link>
   );

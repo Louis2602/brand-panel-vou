@@ -1,22 +1,25 @@
+"use client";
+
 import { UserButton } from "@/components/auth/user-button";
 import {
   MobileNavigation,
   Navigation,
 } from "@/components/dashboard/nav/navigation";
 import { Logo } from "@/components/global/logo";
+import { useAuth } from "@/providers/auth-provider";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
-const user = {
-  imageUrl: "",
-  firstName: "Momo",
-  lastName: "Admin",
-};
-
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const { user } = useAuth();
+  const router = useRouter();
+  if (user === null) {
+    router.push("/auth/signin");
+  }
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
@@ -38,7 +41,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <div className="flex items-center gap-2 font-semibold lg:hidden">
             <MobileNavigation />
           </div>
-          <UserButton currentUser={user} />
+          <UserButton currentBrand={user} />
         </header>
         <section className="relative p-6 w-full h-full">{children}</section>
       </div>
