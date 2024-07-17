@@ -27,7 +27,7 @@ export const Navigation = ({ onNavLinkClick }: NavigationProps) => {
       <div className="flex flex-col gap-1">
         {dashboardConfig.nav.map((column) => (
           <nav key={column.title} className="flex flex-col gap-1">
-            <h3 className="text-base font-semibold mb-1 text-primary">
+            <h3 className="text-base font-semibold mb-1 text-primary px-4">
               {column.title}
             </h3>
             {column.links.map((link) => {
@@ -38,7 +38,7 @@ export const Navigation = ({ onNavLinkClick }: NavigationProps) => {
                   href={link.href}
                   key={link.label}
                   className={cn(
-                    "group flex items-center gap-3 sm:gap-2 p-2 rounded-md hover:bg-border hover:text-primary transition-colors duration-100 cursor-pointer",
+                    "group flex items-center gap-3 sm:gap-2 py-2 px-4 rounded-md hover:bg-border hover:text-primary transition-colors duration-100 cursor-pointer",
                     pathname === link.href && "bg-border text-primary",
                   )}
                   onClick={handleNavLinkClick}

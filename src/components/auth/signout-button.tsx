@@ -7,7 +7,7 @@ export const SignOutButton = () => {
   const { logout } = useAuth();
   return (
     <button
-      className="group flex items-center gap-3 sm:gap-2 p-2 rounded-md hover:bg-border transition-colors duration-100 text-primary cursor-pointer"
+      className="group flex items-center gap-3 sm:gap-2 py-2 px-4 rounded-md hover:bg-border transition-colors duration-100 text-primary cursor-pointer"
       onClick={logout}
     >
       <Icons.logout className="group-hover:text-primary sm:h-4 sm:w-4" />
