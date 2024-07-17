@@ -15,9 +15,9 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  const { user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
-  if (user === null) {
+  if (!isAuthenticated) {
     router.push("/auth/signin");
   }
   return (

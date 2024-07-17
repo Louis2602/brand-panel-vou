@@ -15,7 +15,7 @@ interface AuthContextProps {
   login: (brandName: string, password: string) => Promise<void>;
   register: (data: any) => Promise<void>;
   logout: () => Promise<void>;
-  isAuthenticated: () => boolean;
+  isAuthenticated: boolean;
   loading: boolean;
 }
 
@@ -40,12 +40,12 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         localStorage.setItem("auth", JSON.stringify(userData));
       }
 
-      toast.success("Login successfully");
+      toast.success(res.data?.message);
 
       router.push("/dashboard");
     } catch (error: any) {
-      console.error("Login failed:", error.response.data);
-      toast.error("Something went wrong");
+      console.error("Login failed:", error.message);
+      toast.error("Login failed:", error.message);
     } finally {
       setLoading(false);
     }
@@ -64,12 +64,12 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setUser(userData);
         localStorage.setItem("auth", JSON.stringify(userData));
       }
-      toast.success("Create brand successfully");
+      toast.success(res.data?.message);
 
       router.push("/dashboard");
     } catch (error: any) {
-      console.error("Login failed:", error.message);
-      toast.error("Something went wrong");
+      console.error("Create brand failed:", error.message);
+      toast.error("Create brand failed:", error.message);
     } finally {
       setLoading(false);
     }
@@ -97,9 +97,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
   }, []);
 
-  const isAuthenticated = () => {
-    return !!user;
-  };
+  const isAuthenticated = !!user;
 
   return (
     <AuthContext.Provider

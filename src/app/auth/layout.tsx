@@ -7,9 +7,9 @@ interface AuthLayoutProps {
 }
 
 const AuthLayout = ({ children }: AuthLayoutProps) => {
-  const { user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
-  if (user) {
+  if (isAuthenticated) {
     router.push("/dashboard");
   }
   return (
