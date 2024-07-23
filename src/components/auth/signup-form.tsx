@@ -35,10 +35,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { SignUpSchema } from "@/lib/validations/auth";
 import { Loader } from "../global/loader";
+import { toast } from "sonner";
+import { env } from "@/env";
 
 export function SignUpForm() {
   const [submitError, setSubmitError] = useState<string | undefined>("");
-  const [location, setLocation] = useState({});
+  const [location, setLocation] = useState<{} | null>(null);
 
   const form = useForm<z.infer<typeof SignUpSchema>>({
     mode: "onChange",
@@ -59,23 +61,44 @@ export function SignUpForm() {
   const onSubmit: SubmitHandler<z.infer<typeof SignUpSchema>> = async (
     data,
   ) => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success, error);
-    } else {
-      console.log("Geolocation not supported");
+    try {
+      const location = await getLocation(data.address);
+      if (location) {
+        await register({ ...data, ...location });
+      } else {
+        toast.error(
+          "Unable to process registration without valid location data.",
+        );
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      setSubmitError(
+        "An error occurred during registration. Please try again.",
+      );
     }
-    await register({ ...data, ...location });
   };
 
-  function success(position: any) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
-    setLocation({ latitude, longitude });
-  }
+  const getLocation = async (address: string) => {
+    const accessToken = env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+    const encodedAddress = encodeURIComponent(address);
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodedAddress}.json?access_token=${accessToken}`;
 
-  function error() {
-    console.log("Unable to retrieve your location");
-  }
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data.features && data.features.length > 0) {
+        const [longitude, latitude] = data.features[0].center;
+        return { latitude, longitude };
+      } else {
+        toast.error("No results found for the given address.");
+        return null;
+      }
+    } catch (error) {
+      toast.error("An error occurred while fetching the location.");
+      return null;
+    }
+  };
 
   useEffect(() => {
     if (name) {
@@ -206,6 +229,7 @@ export function SignUpForm() {
                           id="brandName"
                           type="text"
                           placeholder="grab, starbucks, ..."
+                          disabled
                         />
                       </FormControl>
                       <FormMessage />

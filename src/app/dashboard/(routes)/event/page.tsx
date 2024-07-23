@@ -10,45 +10,45 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { PromotionTable } from "@/components/tables/promotions/table";
-import { columns } from "@/components/tables/promotions/column";
-import { usePromotions } from "@/server/promotions/query";
+import { EventTable } from "@/components/tables/event/table";
+import { columns } from "@/components/tables/event/column";
+import { useEvents } from "@/server/event/query";
 import { Heading } from "@/components/global/heading";
+import { CreateEventForm } from "./_components/create-event-form";
 
-const PromotionsPage = () => {
-  const { data: promotions } = usePromotions();
-  const totalPromotions = promotions ? promotions.length : 0;
+const EventPage = () => {
+  const { data: events } = useEvents();
+  const totalEvents = events ? events.length : 0;
   return (
     <div>
       <Sheet>
         <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
           <div className="flex items-start justify-between">
             <Heading
-              title={`Promotions (${totalPromotions})`}
-              description="Manage all promotions campaigns."
+              title={`Events (${totalEvents})`}
+              description="Manage all events promotion campaigns."
               icon={Tag}
             />
             <SheetTrigger asChild>
               <Button>
-                <Plus className="mr-2 h-4 w-4" /> Add Promotion
+                <Plus className="mr-2 h-4 w-4" /> Add new event
               </Button>
             </SheetTrigger>
-            <SheetContent className="sm:max-w-2xl">
+            <SheetContent className="sm:max-w-2xl overflow-y-auto">
               <SheetHeader>
-                <SheetTitle>Create new promotion campaign</SheetTitle>
+                <SheetTitle>Create new event campaign</SheetTitle>
                 <SheetDescription>
                   Fill in all the information fields below.
                 </SheetDescription>
               </SheetHeader>
-              {/* <CreatePromotionForm /> */}
+              <CreateEventForm />
             </SheetContent>
           </div>
-
-          <PromotionTable columns={columns} data={promotions || []} />
+          <EventTable columns={columns} data={events || []} />
         </div>
       </Sheet>
     </div>
   );
 };
 
-export default PromotionsPage;
+export default EventPage;

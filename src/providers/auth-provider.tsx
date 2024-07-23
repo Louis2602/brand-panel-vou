@@ -9,6 +9,7 @@ import { axiosInstance } from "@/lib/api";
 import { Brand } from "@/types/brand";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 interface AuthContextProps {
   user: Brand | null;
@@ -20,6 +21,7 @@ interface AuthContextProps {
 }
 
 const AuthContext = createContext({} as AuthContextProps);
+
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -37,12 +39,10 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       const userData = res.data?.data;
       if (userData) {
         setUser(userData);
-        localStorage.setItem("auth", JSON.stringify(userData));
+        Cookies.set("auth", JSON.stringify(userData), { expires: 7 }); // Set cookie to expire in 7 days
       }
-
       toast.success(res.data?.message);
-
-      router.push("/dashboard");
+      router.push("/dashboard/main");
     } catch (error: any) {
       console.error("Login failed:", error.message);
       toast.error("Login failed:", error.message);
@@ -56,20 +56,17 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     try {
       const res = await axiosInstance.post("/brands", {
         ...data,
-        latitude: 123,
-        longitude: 123,
       });
       const userData = res.data?.data;
       if (userData) {
         setUser(userData);
-        localStorage.setItem("auth", JSON.stringify(userData));
+        Cookies.set("auth", JSON.stringify(userData), { expires: 7 });
       }
       toast.success(res.data?.message);
-
-      router.push("/dashboard");
+      router.push("/dashboard/main");
     } catch (error: any) {
-      console.error("Create brand failed:", error.message);
-      toast.error("Create brand failed:", error.message);
+      console.error(`Failed to create brand: ${error.message}`);
+      toast.error(`Failed to create brand:", ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -79,7 +76,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setLoading(true);
     try {
       setUser(null);
-      localStorage.removeItem("auth");
+      Cookies.remove("auth");
       toast.success("Logout successfully");
       router.push("/auth/signin");
     } catch (error: any) {
@@ -91,7 +88,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
 
   useEffect(() => {
-    const authData = localStorage.getItem("auth");
+    const authData = Cookies.get("auth");
     if (authData) {
       setUser(JSON.parse(authData));
     }

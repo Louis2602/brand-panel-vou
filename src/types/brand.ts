@@ -9,16 +9,25 @@ export type Brand = {
   latitude: string;
   longitude: string;
   role: BRAND_STATUS;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
-export type Promotion = {
-  id?: string;
+export type Event = {
+  id: string;
   name: string;
-  description: string;
-  startDate?: Date;
-  endDate?: Date;
-  promotionRate: string;
-  maxQuantity: string;
+  image: string;
+  startTime?: Date;
+  endTime?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type CreateEvent = {
+  brandId: string;
+  name: string;
+  image: string | ArrayBuffer | null;
+  startTime: Date;
+  endTime: Date;
+  games: string[];
 };

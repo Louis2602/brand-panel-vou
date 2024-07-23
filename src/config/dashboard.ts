@@ -8,12 +8,12 @@ export const dashboardConfig: DashboardConfig = {
         {
           icon: "dashboard",
           label: "Dashboard",
-          href: "/dashboard",
+          href: "/dashboard/main",
         },
         {
           icon: "tag",
-          label: "Promotions",
-          href: "/dashboard/promotion",
+          label: "Events",
+          href: "/dashboard/event",
         },
       ],
     },

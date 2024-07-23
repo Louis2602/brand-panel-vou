@@ -8,10 +8,13 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_SERVER_URL: z.string().min(1),
+    NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN: z.string().min(1),
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
     APP_URL: process.env.APP_URL,
     NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,
+    NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN:
+      process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN,
   },
 });

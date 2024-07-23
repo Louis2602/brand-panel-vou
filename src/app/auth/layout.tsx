@@ -10,7 +10,7 @@ const AuthLayout = ({ children }: AuthLayoutProps) => {
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   if (isAuthenticated) {
-    router.push("/dashboard");
+    router.push("/dashboard/main");
   }
   return (
     <main className="h-screen p-6 flex items-center justify-center">

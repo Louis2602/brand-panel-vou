@@ -9,9 +9,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Edit, Eye, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
-import { Promotion } from "@/types/brand";
+import { Event } from "@/types/brand";
 import {
   Sheet,
   SheetContent,
@@ -20,17 +20,19 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useDeletePromotion } from "@/server/promotions/mutation";
+import { useDeleteEvent } from "@/server/event/mutation";
+import { CreateEventForm } from "@/app/dashboard/(routes)/event/_components/create-event-form";
+import Link from "next/link";
 
 interface CellActionProps {
-  data: Promotion;
+  data: Event;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const deletePromotion = useDeletePromotion();
+  const deleteEvent = useDeleteEvent();
   const onDelete = async () => {
     try {
-      deletePromotion.mutate(data.id!);
+      deleteEvent.mutate(data.id!);
     } catch (error) {
       console.error("Error deleting account:", error);
       toast.error("Error deleting account:");
@@ -49,6 +51,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem>
+            <Link href={`/dashboard/event/${data.id}`}>
+              <div className="flex transition-all hover:bg-muted items-center gap-2 w-full rounded-md">
+                <Eye className="h-4 w-4" /> View
+              </div>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
             <SheetTrigger asChild>
               <div className="flex transition-all hover:bg-muted items-center gap-2 w-full rounded-md">
                 <Edit className="h-4 w-4" /> Update
@@ -56,9 +65,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             </SheetTrigger>
           </DropdownMenuItem>
           <ConfirmModal
-            header="Delete this promotion?"
-            description="This will delete this promotion completely"
-            disabled={deletePromotion.isPending}
+            header="Delete this event?"
+            description="This will delete this event completely"
+            disabled={deleteEvent.isPending}
             onConfirm={onDelete}
           >
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
@@ -69,12 +78,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       </DropdownMenu>
       <SheetContent className="sm:max-w-2xl">
         <SheetHeader>
-          <SheetTitle>Update promotion campaign</SheetTitle>
+          <SheetTitle>Update event campaign</SheetTitle>
           <SheetDescription>
             Fill in all the information fields below.
           </SheetDescription>
         </SheetHeader>
-        {/* <CreatePromotionForm update={true} promotion={data} /> */}
+        <CreateEventForm update={true} event={data} />
       </SheetContent>
     </Sheet>
   );

@@ -3,10 +3,11 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { Promotion } from "@/types/brand";
+import { Event } from "@/types/brand";
 import { format } from "date-fns";
+import Image from "next/image";
 
-export const columns: ColumnDef<Promotion>[] = [
+export const columns: ColumnDef<Event>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -27,31 +28,27 @@ export const columns: ColumnDef<Promotion>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
-    header: "NAME",
-  },
-  {
-    accessorKey: "description",
-    header: "DESCRIPTION",
-  },
-  {
-    accessorKey: "promotionRate",
-    header: "SALE OFF",
+    accessorKey: "image",
+    header: "IMAGE",
     cell: ({ renderValue, ...props }) => {
       const value = renderValue() as string;
       return (
-        <span className="bg-green-200 text-green-800 px-2 py-1 rounded-md">
-          {value} %
-        </span>
+        <Image
+          src={value}
+          alt="Event Image"
+          width={50}
+          height={50}
+          className="shadow-md rounded-md"
+        />
       );
     },
   },
   {
-    accessorKey: "maxQuantity",
-    header: "QUANTITY",
+    accessorKey: "name",
+    header: "NAME",
   },
   {
-    accessorKey: "startDate",
+    accessorKey: "startTime",
     header: "FROM",
     cell: ({ renderValue, ...props }) => {
       const value = renderValue() as string;
@@ -60,7 +57,7 @@ export const columns: ColumnDef<Promotion>[] = [
     },
   },
   {
-    accessorKey: "endDate",
+    accessorKey: "endTime",
     header: "TO",
     cell: ({ renderValue, ...props }) => {
       const value = renderValue() as string;

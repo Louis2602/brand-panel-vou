@@ -11,7 +11,6 @@ interface UserButtonProps {
 }
 
 export const UserButton = ({ currentBrand }: UserButtonProps) => {
-  console.log(currentBrand);
   if (!currentBrand) {
     return <Loader className="h-4 w-4" />;
   }

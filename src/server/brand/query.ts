@@ -1,20 +1,10 @@
 import { axiosInstance } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 
-export const useAccounts = () => {
+export const useBrand = (id: string) => {
   return useQuery({
-    queryKey: ["users"],
+    queryKey: ["brand"],
     queryFn: () =>
-      axiosInstance
-        .get("/admin/get-employees")
-        .then((res) => res.data.employees),
-  });
-};
-
-export const useStaffs = () => {
-  return useQuery({
-    queryKey: ["staffs"],
-    queryFn: () =>
-      axiosInstance.get("/admin/get-staffs").then((res) => res.data.staffs),
+      axiosInstance.get(`/brand/${id}`).then((res) => res.data?.data),
   });
 };

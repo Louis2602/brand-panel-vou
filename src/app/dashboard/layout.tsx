@@ -15,10 +15,11 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const router = useRouter();
-  if (!isAuthenticated) {
+  if (!isAuthenticated || user === null) {
     router.push("/auth/signin");
+    return;
   }
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
