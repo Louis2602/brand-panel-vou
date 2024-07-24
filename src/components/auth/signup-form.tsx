@@ -40,7 +40,6 @@ import { env } from "@/env";
 
 export function SignUpForm() {
   const [submitError, setSubmitError] = useState<string | undefined>("");
-  const [location, setLocation] = useState<{} | null>(null);
 
   const form = useForm<z.infer<typeof SignUpSchema>>({
     mode: "onChange",

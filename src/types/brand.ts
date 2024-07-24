@@ -1,4 +1,4 @@
-export type BRAND_STATUS = "ACTIVE" | "INACTIVE";
+export type STATUS = "ACTIVE" | "INACTIVE";
 
 export type Brand = {
   id: string;
@@ -8,7 +8,7 @@ export type Brand = {
   address: string;
   latitude: string;
   longitude: string;
-  role: BRAND_STATUS;
+  status: STATUS;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -30,4 +30,22 @@ export type CreateEvent = {
   startTime: Date;
   endTime: Date;
   games: string[];
+};
+
+export type Voucher = {
+  code: string;
+  qrCode: string;
+  image: string;
+  value: number;
+  description: string;
+  expiredDate: Date;
+  status: string;
+  artifactsNeeded: number;
+  amount: number;
+  eventId: string;
+};
+
+export type Artifact = {
+  image: string;
+  eventId: string;
 };

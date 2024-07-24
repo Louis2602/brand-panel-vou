@@ -15,6 +15,16 @@ export const dashboardConfig: DashboardConfig = {
           label: "Events",
           href: "/dashboard/event",
         },
+        {
+          icon: "ticket",
+          label: "Vouchers",
+          href: "/dashboard/voucher",
+        },
+        {
+          icon: "puzzle",
+          label: "Artifacts",
+          href: "/dashboard/artifact",
+        },
       ],
     },
     {

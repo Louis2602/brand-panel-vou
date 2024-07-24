@@ -38,9 +38,13 @@ import {
   User,
   Dices,
   LucideIcon,
+  Ticket,
+  Puzzle,
 } from "lucide-react";
 
 export const Icons = {
+  puzzle: Puzzle,
+  ticket: Ticket,
   games: Dices,
   user: User,
   tag: Tag,

@@ -5,10 +5,10 @@ import {
   MobileNavigation,
   Navigation,
 } from "@/components/dashboard/nav/navigation";
+import { Loader } from "@/components/global/loader";
 import { Logo } from "@/components/global/logo";
 import { useAuth } from "@/providers/auth-provider";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -16,10 +16,12 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { isAuthenticated, user } = useAuth();
-  const router = useRouter();
   if (!isAuthenticated || user === null) {
-    router.push("/auth/signin");
-    return;
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader className="w-20 h-20" />
+      </div>
+    );
   }
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
