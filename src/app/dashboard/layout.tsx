@@ -1,14 +1,11 @@
 "use client";
 
-import { UserButton } from "@/components/auth/user-button";
-import {
-  MobileNavigation,
-  Navigation,
-} from "@/components/dashboard/nav/navigation";
+import { Navigation } from "./_components/navigation";
 import { Loader } from "@/components/global/loader";
 import { Logo } from "@/components/global/logo";
 import { useAuth } from "@/providers/auth-provider";
 import Link from "next/link";
+import { Header } from "./_components/header";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -40,12 +37,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         </div>
       </div>
       <div className="flex flex-col">
-        <header className="flex h-14 lg:h-[64px] items-center gap-4 border-b bg-gray-100/40 px-6 dark:bg-gray-800/40 justify-between lg:justify-end">
-          <div className="flex items-center gap-2 font-semibold lg:hidden">
-            <MobileNavigation />
-          </div>
-          <UserButton currentBrand={user} />
-        </header>
+        <Header />
         <section className="relative p-6 w-full h-full">{children}</section>
       </div>
     </div>

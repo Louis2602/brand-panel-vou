@@ -7,7 +7,7 @@ import { Brand } from "@/types/brand";
 import { Loader } from "../global/loader";
 
 interface UserButtonProps {
-  currentBrand: Brand;
+  currentBrand: Brand | null;
 }
 
 export const UserButton = ({ currentBrand }: UserButtonProps) => {
