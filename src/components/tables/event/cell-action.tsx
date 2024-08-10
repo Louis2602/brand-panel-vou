@@ -50,11 +50,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem>
-            <Link href={`/dashboard/event/${data.id}`}>
-              <div className="flex transition-all hover:bg-muted items-center gap-2 w-full rounded-md">
-                <Eye className="h-4 w-4" /> View
-              </div>
+          <DropdownMenuItem asChild>
+            <Link
+              href={`/dashboard/event/${data.id}`}
+              className="flex transition-all hover:bg-muted items-center gap-2 w-full rounded-md"
+            >
+              <Eye className="h-4 w-4" /> View
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>

@@ -37,17 +37,20 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         password,
       });
       const userData = res.data?.data;
+      console.log(res.data);
       if (userData) {
         setUser(userData);
         Cookies.set("auth", JSON.stringify(userData), { expires: 7 }); // Set cookie to expire in 7 days
-        toast.success(res.data?.message);
+        toast.success("Login successfully");
       } else {
         toast.error(res.data?.message);
       }
       router.push("/dashboard/main");
     } catch (error: any) {
-      console.error("Login failed:", error.message);
-      toast.error("Login failed:", error.message);
+      console.error("Something wrong happened. Cannot login");
+      toast.error("Failed to login", {
+        description: "Something wrong happened",
+      });
     } finally {
       setLoading(false);
     }
@@ -64,11 +67,11 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setUser(userData);
         Cookies.set("auth", JSON.stringify(userData), { expires: 7 });
       }
-      toast.success(res.data?.message);
+      toast.success("Create brand successfully");
       router.push("/dashboard/main");
     } catch (error: any) {
       console.error(`Failed to create brand: ${error.message}`);
-      toast.error(`Failed to create brand:", ${error.message}`);
+      toast.error(`Failed to create brand:, ${error.message}`);
     } finally {
       setLoading(false);
     }

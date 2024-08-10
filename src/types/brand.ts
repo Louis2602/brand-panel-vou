@@ -43,9 +43,11 @@ export type Voucher = {
   artifactsNeeded: number;
   amount: number;
   eventId: string;
+  brandId: string;
 };
 
 export type Artifact = {
+  name: string;
   image: string;
   eventId: string;
 };

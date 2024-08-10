@@ -15,9 +15,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Loader } from "@/components/global/loader";
 import { Event } from "@/types/brand";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { Calendar as CalendarIcon, X } from "lucide-react";
-import { DateRange } from "react-day-picker";
 import { cn, generateVoucherCode } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -92,17 +91,6 @@ export const CreateVoucherForm = ({
   const { data: events } = useEvents();
   const [imageUrl, setImageUrl] = useState<string>("");
   const [qrUrl, setQrUrl] = useState<string>("");
-  const [date, setDate] = useState<DateRange | undefined>(
-    event
-      ? {
-          from: event.startTime,
-          to: event.endTime,
-        }
-      : {
-          from: new Date(),
-          to: addDays(new Date(), 20),
-        },
-  );
   const createVoucher = useCreateVoucher();
   const updateEvent = useUpdateEvent();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -135,6 +123,7 @@ export const CreateVoucherForm = ({
         amount: parseInt(data.amount),
         artifactsNeeded: parseInt(data.artifactsNeeded),
         value: parseFloat(data.value),
+        brandId: user?.id,
       };
       createVoucher.mutate(voucherData);
     }

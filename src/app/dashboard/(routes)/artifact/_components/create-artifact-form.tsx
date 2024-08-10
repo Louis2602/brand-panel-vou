@@ -30,8 +30,12 @@ import {
 } from "@/components/ui/select";
 import { useCreateArtifact } from "@/server/artifacts/mutation";
 import { X } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
+  artifactName: z.string().min(1, {
+    message: "Artifact must have a name",
+  }),
   eventId: z.string().min(1, {
     message: "Must choose an event.",
   }),
@@ -76,6 +80,27 @@ export const CreateArtifactForm = ({
     <div className="py-4">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="grid w-full gap-3">
+            <Label htmlFor="artifactName">Artifact Name</Label>
+            <FormField
+              disabled={isLoading}
+              control={form.control}
+              name="artifactName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="text"
+                      id="artifactName"
+                      placeholder="Diamond"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div className="grid w-full gap-3">
             <Label htmlFor="eventId">Select an event</Label>
             <FormField
