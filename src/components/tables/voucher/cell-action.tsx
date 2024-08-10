@@ -21,8 +21,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useDeleteEvent } from "@/server/event/mutation";
-import { CreateEventForm } from "@/app/dashboard/(routes)/event/_components/create-event-form";
 import Link from "next/link";
+import { CreateVoucherForm } from "@/app/dashboard/(routes)/voucher/_components/create-voucher.form";
 
 interface CellActionProps {
   data: Voucher;
@@ -50,8 +50,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem>
-            <Link href={`/dashboard/event/${data.id}`}>
+          <DropdownMenuItem asChild>
+            <Link href={`/dashboard/voucher/${data.id}`}>
               <div className="flex transition-all hover:bg-muted items-center gap-2 w-full rounded-md">
                 <Eye className="h-4 w-4" /> View
               </div>
@@ -65,8 +65,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             </SheetTrigger>
           </DropdownMenuItem>
           <ConfirmModal
-            header="Delete this event?"
-            description="This will delete this event completely"
+            header="Delete this voucher?"
+            description="This action will delete this voucher completely"
             disabled={deleteEvent.isPending}
             onConfirm={onDelete}
           >
@@ -83,7 +83,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             Fill in all the information fields below.
           </SheetDescription>
         </SheetHeader>
-        <CreateEventForm update={true} event={data} />
+        <CreateVoucherForm update={true} voucher={data} />
       </SheetContent>
     </Sheet>
   );

@@ -20,11 +20,6 @@ export const dashboardConfig: DashboardConfig = {
           label: "Vouchers",
           href: "/dashboard/voucher",
         },
-        {
-          icon: "puzzle",
-          label: "Artifacts",
-          href: "/dashboard/artifact",
-        },
       ],
     },
     {

@@ -15,9 +15,13 @@ import { columns } from "@/components/tables/event/column";
 import { useEvents } from "@/server/event/query";
 import { Heading } from "@/components/global/heading";
 import { CreateEventForm } from "./_components/create-event-form";
+import Empty from "@/components/global/empty";
 
 const EventPage = () => {
   const { data: events } = useEvents();
+  if (events === undefined) {
+    return <Empty text="No events campaigns found." />;
+  }
   const totalEvents = events ? events.length : 0;
   return (
     <div>
@@ -44,7 +48,7 @@ const EventPage = () => {
               <CreateEventForm />
             </SheetContent>
           </div>
-          <EventTable columns={columns} data={events || []} />
+          <EventTable columns={columns} data={events} />
         </div>
       </Sheet>
     </div>

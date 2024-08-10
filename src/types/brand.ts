@@ -33,6 +33,7 @@ export type CreateEvent = {
 };
 
 export type Voucher = {
+  id?: string;
   code: string;
   qrCode: string;
   image: string;
@@ -47,6 +48,7 @@ export type Voucher = {
 };
 
 export type Artifact = {
+  id?: string;
   name: string;
   image: string;
   eventId: string;

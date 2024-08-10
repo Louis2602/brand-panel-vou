@@ -15,9 +15,17 @@ import { columns } from "@/components/tables/voucher/column";
 import { useVouchers } from "@/server/voucher/query";
 import { Heading } from "@/components/global/heading";
 import { CreateVoucherForm } from "./_components/create-voucher.form";
+import Empty from "@/components/global/empty";
+import { useAuth } from "@/providers/auth-provider";
+import { redirect } from "next/navigation";
 
 const VoucherPage = () => {
-  const { data: vouchers } = useVouchers();
+  const { user } = useAuth();
+  if (!user) redirect("/auth/signin");
+  const { data: vouchers } = useVouchers(user.id);
+  if (vouchers === undefined) {
+    return <Empty text="No vouchers found." />;
+  }
   const totalVouchers = vouchers ? vouchers.length : 0;
   return (
     <div>

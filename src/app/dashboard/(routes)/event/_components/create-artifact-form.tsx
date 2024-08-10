@@ -12,55 +12,43 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "@/components/global/loader";
-import { Artifact, Event } from "@/types/brand";
+import { Artifact } from "@/types/brand";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
-import { useUpdateEvent } from "@/server/voucher/mutation";
 import { toast } from "sonner";
-import { useAuth } from "@/providers/auth-provider";
 import Image from "next/image";
 import { UploadDropzone } from "@/utils/uploadthing";
-import { useEvents } from "@/server/event/query";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
 import { useCreateArtifact } from "@/server/artifacts/mutation";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 const formSchema = z.object({
-  artifactName: z.string().min(1, {
+  name: z.string().min(1, {
     message: "Artifact must have a name",
-  }),
-  eventId: z.string().min(1, {
-    message: "Must choose an event.",
   }),
 });
 
 interface CreateArtifactFormProps {
   update?: boolean;
   artifact?: Artifact;
+  eventId: string;
 }
 
 export const CreateArtifactForm = ({
   update,
   artifact,
+  eventId,
 }: CreateArtifactFormProps) => {
-  const { user } = useAuth();
-  const { data: events } = useEvents();
   const [imageUrl, setImageUrl] = useState<string>("");
   const createArtifact = useCreateArtifact();
-  const updateEvent = useUpdateEvent();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
   const isLoading = form.formState.isLoading;
   async function onSubmit(data: z.infer<typeof formSchema>) {
+    console.log("Form submitted with data:", data);
+    console.log("Image URL:", imageUrl);
     if (update) {
       const updatedData = {
         ...data,
@@ -68,11 +56,12 @@ export const CreateArtifactForm = ({
       };
       // updateEvent.mutate(updatedData);
     } else {
-      const voucherData = {
+      const artifactData = {
         ...data,
         image: imageUrl,
+        eventId: eventId,
       };
-      createArtifact.mutate(voucherData);
+      createArtifact.mutate(artifactData);
     }
   }
 
@@ -81,49 +70,21 @@ export const CreateArtifactForm = ({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid w-full gap-3">
-            <Label htmlFor="artifactName">Artifact Name</Label>
+            <Label htmlFor="name">Artifact Name</Label>
             <FormField
               disabled={isLoading}
               control={form.control}
-              name="artifactName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Input
                       {...field}
                       type="text"
-                      id="artifactName"
+                      id="name"
                       placeholder="Diamond"
                     />
                   </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="grid w-full gap-3">
-            <Label htmlFor="eventId">Select an event</Label>
-            <FormField
-              disabled={isLoading}
-              control={form.control}
-              name="eventId"
-              render={({ field }) => (
-                <FormItem>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Choose" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {events &&
-                        events.map((event: Event) => (
-                          <SelectItem value={event.id} key={event.id}>
-                            {event.name}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

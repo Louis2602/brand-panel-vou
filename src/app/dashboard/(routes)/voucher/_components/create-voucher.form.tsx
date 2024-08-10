@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Loader } from "@/components/global/loader";
-import { Event } from "@/types/brand";
+import { Voucher } from "@/types/brand";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, X } from "lucide-react";
 import { cn, generateVoucherCode } from "@/lib/utils";
@@ -67,12 +67,12 @@ const formSchema = z.object({
 
 interface CreateVoucherFormProps {
   update?: boolean;
-  event?: Event;
+  voucher?: Voucher;
 }
 
 export const CreateVoucherForm = ({
   update,
-  event,
+  voucher,
 }: CreateVoucherFormProps) => {
   const { user } = useAuth();
   const { startUpload, isUploading } = useUploadThing("imageUploader", {

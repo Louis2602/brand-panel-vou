@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 import { Voucher } from "@/types/brand";
 import { format } from "date-fns";
-import Image from "next/image";
+import { useEvent } from "@/server/event/query";
 
 export const columns: ColumnDef<Voucher>[] = [
   {
@@ -30,6 +30,18 @@ export const columns: ColumnDef<Voucher>[] = [
   {
     accessorKey: "code",
     header: "CODE",
+  },
+  {
+    accessorKey: "eventId",
+    header: "EVENT",
+    cell: ({ renderValue, ...props }) => {
+      const value = renderValue() as string;
+      const { data: event } = useEvent(value);
+      if (!event) {
+        return <div className="text-gray-500">Loading...</div>;
+      }
+      return <span className="font-bold">{event.name}</span>;
+    },
   },
   {
     accessorKey: "description",

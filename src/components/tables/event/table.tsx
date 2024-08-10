@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import {
+  ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -26,14 +27,17 @@ import {
 } from "@/components/ui/popover";
 import { format, isValid, isWithinInterval } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { columns } from "./column";
 import { Event } from "@/types/brand";
 
-interface EventTableProps {
+interface EventTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[];
   data: Event[];
 }
 
-export function EventTable({ data }: EventTableProps) {
+export function EventTable<TData, TValue>({
+  columns,
+  data,
+}: EventTableProps<TData, TValue>) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [dateRange, setDateRange] = useState<{
     from: Date | undefined;

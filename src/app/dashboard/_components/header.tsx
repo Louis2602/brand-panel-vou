@@ -9,7 +9,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { NotificationCard } from "./notification-card";
-import { Badge } from "@/components/ui/badge";
 
 export const Header = () => {
   const { user } = useAuth();

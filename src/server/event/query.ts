@@ -1,25 +1,29 @@
 import { axiosInstance } from "@/lib/api";
+import { useAuth } from "@/providers/auth-provider";
 import { Event } from "@/types/brand";
 import { useQuery } from "@tanstack/react-query";
 
 export const useEvents = () => {
+  const { user } = useAuth();
   return useQuery({
     queryKey: ["events"],
-    queryFn: () => axiosInstance.get("/events").then((res) => res.data.data),
+    queryFn: () =>
+      axiosInstance
+        .get<{
+          data: Event[];
+        }>(`/events?brands=${user?.id}`)
+        .then((res) => res.data.data),
   });
 };
-
-interface EventResponse {
-  data: Event;
-  message: string;
-}
 
 export const useEvent = (id: string) => {
   return useQuery({
     queryKey: ["event"],
     queryFn: () =>
       axiosInstance
-        .get<EventResponse>(`/events/${id}`)
+        .get<{
+          data: Event;
+        }>(`/events/${id}`)
         .then((res) => res.data.data),
   });
 };
