@@ -19,39 +19,38 @@ import Empty from "@/components/global/empty";
 
 const EventPage = () => {
   const { data: events } = useEvents();
-  if (events === undefined) {
-    return <Empty text="No events campaigns found." />;
-  }
   const totalEvents = events ? events.length : 0;
   return (
-    <div>
-      <Sheet>
-        <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
-          <div className="flex items-start justify-between">
-            <Heading
-              title={`Events (${totalEvents})`}
-              description="Manage all events promotion campaigns."
-              icon={Tag}
-            />
-            <SheetTrigger asChild>
-              <Button>
-                <Plus className="mr-2 h-4 w-4" /> Add new event
-              </Button>
-            </SheetTrigger>
-            <SheetContent className="sm:max-w-2xl overflow-y-auto">
-              <SheetHeader>
-                <SheetTitle>Create new event campaign</SheetTitle>
-                <SheetDescription>
-                  Fill in all the information fields below.
-                </SheetDescription>
-              </SheetHeader>
-              <CreateEventForm />
-            </SheetContent>
-          </div>
-          <EventTable columns={columns} data={events} />
+    <Sheet>
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+        <div className="flex items-start justify-between">
+          <Heading
+            title={`Events (${totalEvents})`}
+            description="Manage all events promotion campaigns."
+            icon={Tag}
+          />
+          <SheetTrigger asChild>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" /> Add new event
+            </Button>
+          </SheetTrigger>
+          <SheetContent className="sm:max-w-2xl overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Create new event campaign</SheetTitle>
+              <SheetDescription>
+                Fill in all the information fields below.
+              </SheetDescription>
+            </SheetHeader>
+            <CreateEventForm />
+          </SheetContent>
         </div>
-      </Sheet>
-    </div>
+        {events === undefined ? (
+          <Empty text="No events campaigns found." />
+        ) : (
+          <EventTable columns={columns} data={events} />
+        )}
+      </div>
+    </Sheet>
   );
 };
 
