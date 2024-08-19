@@ -42,10 +42,10 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setUser(userData);
         Cookies.set("auth", JSON.stringify(userData), { expires: 7 }); // Set cookie to expire in 7 days
         toast.success("Login successfully");
+        router.push("/dashboard/main");
       } else {
         toast.error(res.data?.message);
       }
-      router.push("/dashboard/main");
     } catch (error: any) {
       console.error("Something wrong happened. Cannot login");
       toast.error("Failed to login", {

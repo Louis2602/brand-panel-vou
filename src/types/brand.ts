@@ -14,7 +14,7 @@ export type Brand = {
 };
 
 export type Event = {
-  id: string;
+  id?: string;
   name: string;
   image: string;
   startTime?: Date;
@@ -29,7 +29,7 @@ export type CreateEvent = {
   image: string | ArrayBuffer | null;
   startTime: Date;
   endTime: Date;
-  games: string[];
+  gameId: string;
 };
 
 export type Voucher = {
