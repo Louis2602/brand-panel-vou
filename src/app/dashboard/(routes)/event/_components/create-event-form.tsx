@@ -46,7 +46,7 @@ export const CreateEventForm = ({ update, event }: CreateEventFormProps) => {
   const createEvent = useCreateEvent();
   const updateEvent = useUpdateEvent();
 
-  const { data: games } = useGames();
+  const { data: games } = useGames("all");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

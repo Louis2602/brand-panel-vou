@@ -18,10 +18,16 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useGames } from "@/server/games/query";
+import { Loader } from "@/components/global/loader";
 
 const QuizGamesListPage = () => {
-  let quizGames: any[] = [];
+  const { data: quizGames } = useGames("quiz");
   const router = useRouter();
+
+  if (quizGames === undefined) {
+    return <Loader />;
+  }
 
   return (
     <div>

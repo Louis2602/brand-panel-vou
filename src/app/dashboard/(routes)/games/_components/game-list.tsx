@@ -15,13 +15,13 @@ const GameTypesListPage = () => {
       id: "quiz",
       name: "Quiz Game",
       description: "Test your knowledge with interactive quizzes",
-      icon: "🧠", // You can replace this with an actual icon component if preferred
+      icon: "🧠",
     },
     {
       id: "phone-shaking",
       name: "Phone Shaking Game",
       description: "Shake your phone to complete challenges",
-      icon: "📱", // You can replace this with an actual icon component if preferred
+      icon: "📱",
     },
   ];
 

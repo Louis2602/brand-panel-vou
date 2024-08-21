@@ -18,10 +18,16 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { useGames } from "@/server/games/query";
+import { Loader } from "@/components/global/loader";
 
 const PhoneShakingGamesListPage = () => {
-  let phoneShakingGames: any[] = [];
+  const { data: phoneShakingGames } = useGames("shake");
   const router = useRouter();
+
+  if (phoneShakingGames === undefined) {
+    return <Loader />;
+  }
 
   return (
     <div>

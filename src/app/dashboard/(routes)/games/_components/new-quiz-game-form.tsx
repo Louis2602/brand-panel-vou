@@ -98,6 +98,7 @@ export const NewQuizGameForm = () => {
       })),
     };
     createGame.mutate(newGameData);
+    form.reset();
   };
 
   return (
