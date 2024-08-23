@@ -10,13 +10,15 @@ export const useGames = (type: string) => {
     queryFn: () =>
       axiosInstance
         .get<Game[]>(`/games?brands=${user?.id}&type=${type}`)
-        .then((res) => res.data),
+        .then((res) => {
+          return res.data;
+        }),
   });
 };
 
 export const useGame = (id: string) => {
   return useQuery({
-    queryKey: ["games"],
+    queryKey: ["games", id],
     queryFn: () =>
       axiosInstance.get<Game>(`/games/${id}`).then((res) => res.data),
   });

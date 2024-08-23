@@ -89,19 +89,18 @@ export const CreateVoucherForm = ({
     },
   });
   const { data: events } = useEvents();
-  const [imageUrl, setImageUrl] = useState<string>("");
-  const [qrUrl, setQrUrl] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>(voucher?.image || "");
+  const [qrUrl, setQrUrl] = useState<string>(voucher?.qrCode || "");
   const createVoucher = useCreateVoucher();
-  const updateEvent = useUpdateEvent();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: "",
-      code: "",
-      amount: "",
-      value: "",
-      artifactsNeeded: "",
-      expiredDate: new Date(),
+      description: voucher?.description ?? "",
+      code: (voucher && voucher?.code) ?? "",
+      amount: (voucher && voucher?.amount.toString()) ?? "",
+      value: (voucher && voucher?.value.toString()) ?? "",
+      artifactsNeeded: (voucher && voucher?.artifactsNeeded.toString()) ?? "",
+      expiredDate: voucher ? new Date(voucher.expiredDate) : new Date(),
     },
   });
 
@@ -113,8 +112,15 @@ export const CreateVoucherForm = ({
         image: imageUrl,
         qrCode: qrUrl,
       };
-      // updateEvent.mutate(updatedData);
+      // updateVoucher.mutate(updatedData);
     } else {
+      const date = new Date(data.expiredDate);
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+
+      const formattedDate = `${year}-${month}-${day}`;
       const voucherData = {
         ...data,
         image: imageUrl,
@@ -123,7 +129,8 @@ export const CreateVoucherForm = ({
         amount: parseInt(data.amount),
         artifactsNeeded: parseInt(data.artifactsNeeded),
         value: parseFloat(data.value),
-        brandId: user?.id,
+        brandId: user?.id!,
+        expiredDate: formattedDate,
       };
       createVoucher.mutate(voucherData);
     }
