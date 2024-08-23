@@ -6,7 +6,8 @@ import { toast } from "sonner";
 export const useUpdateGame = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (newGame: Game) => axiosInstance.patch("/games", newGame),
+    mutationFn: ({ id, updateGame }: { id: string; updateGame: Game }) =>
+      axiosInstance.patch(`/games/${id}`, updateGame),
     onError: (error) => {
       toast.error("An error occurred: " + error.message);
     },

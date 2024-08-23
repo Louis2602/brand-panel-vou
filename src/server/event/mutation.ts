@@ -39,7 +39,7 @@ export const useUpdateEvent = () => {
 export const useDeleteEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (eventId: string) => axiosInstance.delete(`/event/${eventId}`),
+    mutationFn: (eventId: string) => axiosInstance.delete(`/events/${eventId}`),
     onError: (error) => {
       toast.error("An error occurred: " + error.message);
     },

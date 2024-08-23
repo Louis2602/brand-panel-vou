@@ -19,7 +19,7 @@ export const useVouchers = (brandId: string, eventId?: string) => {
 
 export const useVoucher = (id: string) => {
   return useQuery({
-    queryKey: ["vouchers"],
+    queryKey: ["vouchers", id],
     queryFn: () =>
       axiosInstance
         .get<{

@@ -40,7 +40,7 @@ export type Voucher = {
   image: string;
   value: number;
   description: string;
-  expiredDate: Date;
+  expiredDate: string;
   status: string;
   artifactsNeeded: number;
   amount: number;

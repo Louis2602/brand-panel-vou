@@ -31,6 +31,7 @@ import { useCreateGame } from "@/server/games/create-quiz";
 import { Game } from "@/types/game";
 import { useEffect } from "react";
 import { useUpdateGame } from "@/server/games/mutation";
+import { useRouter } from "next/navigation";
 
 const optionSchema = z.object({
   text: z.string().min(1, "Option text is required"),
@@ -64,6 +65,7 @@ interface NewQuizGameFormProps {
 
 export const NewQuizGameForm = ({ update, game }: NewQuizGameFormProps) => {
   const { user } = useAuth();
+  const router = useRouter();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -150,10 +152,11 @@ export const NewQuizGameForm = ({ update, game }: NewQuizGameFormProps) => {
     };
 
     if (update && game) {
-      updateGame.mutate({ id: game.id, ...gameData });
+      updateGame.mutate({ id: game?.id!, updateGame: gameData });
     } else {
       createGame.mutate(gameData);
     }
+    router.push("/dashboard/games/quiz");
   };
 
   return (

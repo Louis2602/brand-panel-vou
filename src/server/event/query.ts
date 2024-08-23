@@ -18,7 +18,7 @@ export const useEvents = () => {
 
 export const useEvent = (id: string) => {
   return useQuery({
-    queryKey: ["event"],
+    queryKey: ["events", id],
     queryFn: () =>
       axiosInstance
         .get<{

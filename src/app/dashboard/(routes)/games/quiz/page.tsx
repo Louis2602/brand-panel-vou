@@ -24,11 +24,12 @@ import { Game } from "@/types/game";
 
 const QuizGamesListPage = () => {
   const { data: quizGames } = useGames("quiz");
-  const router = useRouter();
 
+  const router = useRouter();
   if (quizGames === undefined) {
     return <Loader />;
   }
+  const gamesArray = Array.isArray(quizGames) ? quizGames : [quizGames];
 
   return (
     <div>
@@ -55,7 +56,7 @@ const QuizGamesListPage = () => {
         </Button>
       </div>
 
-      {quizGames.length === 0 ? (
+      {gamesArray.length === 0 ? (
         <Card className="w-full">
           <CardContent className="flex flex-col items-center justify-center py-10">
             <p className="text-lg mb-4">No quiz games have been created yet.</p>
@@ -66,7 +67,7 @@ const QuizGamesListPage = () => {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {quizGames.map((game: Game) => (
+          {gamesArray.map((game: Game) => (
             <Card key={game.id} className="w-full">
               <CardHeader>
                 <CardTitle>{game.name}</CardTitle>

@@ -77,7 +77,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </ConfirmModal>
         </DropdownMenuContent>
       </DropdownMenu>
-      <SheetContent className="sm:max-w-2xl">
+      <SheetContent className="sm:max-w-2xl overflow-auto">
         <SheetHeader>
           <SheetTitle>Update event campaign</SheetTitle>
           <SheetDescription>
