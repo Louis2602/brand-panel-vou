@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useGames } from "@/server/games/query";
 import { Loader } from "@/components/global/loader";
+import { Game } from "@/types/game";
 
 const QuizGamesListPage = () => {
   const { data: quizGames } = useGames("quiz");
@@ -65,14 +66,14 @@ const QuizGamesListPage = () => {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {quizGames.map((game) => (
+          {quizGames.map((game: Game) => (
             <Card key={game.id} className="w-full">
               <CardHeader>
                 <CardTitle>{game.name}</CardTitle>
                 <CardDescription>{game.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <p>Questions: {game.questions.length}</p>
+                <p>Questions: {game.gamePlay.length}</p>
                 {game.allowItemExchange && (
                   <p className="text-sm text-green-600">Allows item exchange</p>
                 )}

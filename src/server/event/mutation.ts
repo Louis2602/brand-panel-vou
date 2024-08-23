@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/lib/api";
-import { Event, CreateEvent } from "@/types/brand";
+import { CreateEvent } from "@/types/brand";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -21,7 +21,7 @@ export const useCreateEvent = () => {
 export const useUpdateEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (updatedEvent: Event) =>
+    mutationFn: (updatedEvent: CreateEvent) =>
       axiosInstance.put("/event", updatedEvent),
     onError: (error) => {
       toast.error("An error occurred: " + error.message);

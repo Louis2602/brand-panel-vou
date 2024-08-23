@@ -6,6 +6,8 @@ import { CellAction } from "./cell-action";
 import { Event } from "@/types/brand";
 import { format } from "date-fns";
 import Image from "next/image";
+import { useGame } from "@/server/games/query";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<Event>[] = [
   {
@@ -46,6 +48,23 @@ export const columns: ColumnDef<Event>[] = [
   {
     accessorKey: "name",
     header: "NAME",
+  },
+  {
+    accessorKey: "gameId",
+    header: "GAME",
+    cell: ({ renderValue }) => {
+      const gameId = renderValue() as string;
+      const { data: game } = useGame(gameId);
+      if (game === undefined || !game) {
+        return <span>Not in any games.</span>;
+      }
+      return (
+        <div className="flex items-center gap-2">
+          <Badge>{game.type}</Badge>
+          <span>{game.name}</span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "startTime",

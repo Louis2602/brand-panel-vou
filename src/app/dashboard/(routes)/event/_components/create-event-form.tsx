@@ -42,11 +42,12 @@ interface CreateEventFormProps {
 
 export const CreateEventForm = ({ update, event }: CreateEventFormProps) => {
   const { user } = useAuth();
+  const { data: games } = useGames("all");
   const [imageUrl, setImageUrl] = useState<string>("");
   const createEvent = useCreateEvent();
   const updateEvent = useUpdateEvent();
 
-  const { data: games } = useGames("all");
+  console.log(games);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,6 +63,10 @@ export const CreateEventForm = ({ update, event }: CreateEventFormProps) => {
     },
   });
 
+  if (games === undefined) {
+    return <Loader />;
+  }
+
   const isLoading = form.formState.isLoading;
 
   function onSubmit(data: z.infer<typeof formSchema>) {
@@ -72,10 +77,9 @@ export const CreateEventForm = ({ update, event }: CreateEventFormProps) => {
     };
 
     if (update) {
-      // updateEvent.mutate(eventData);
+      updateEvent.mutate(eventData);
     } else {
-      console.log(eventData);
-      // createEvent.mutate(eventData);
+      createEvent.mutate(eventData);
     }
 
     form.reset();

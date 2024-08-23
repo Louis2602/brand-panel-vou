@@ -24,11 +24,12 @@ export type Event = {
 };
 
 export type CreateEvent = {
+  id?: string;
   brandId: string;
   name: string;
-  image: string | ArrayBuffer | null;
-  startTime: Date;
-  endTime: Date;
+  image: string;
+  startTime: string;
+  endTime: string;
   gameId: string;
 };
 

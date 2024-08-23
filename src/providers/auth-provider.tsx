@@ -37,7 +37,6 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         password,
       });
       const userData = res.data?.data;
-      console.log(res.data);
       if (userData) {
         setUser(userData);
         Cookies.set("auth", JSON.stringify(userData), { expires: 7 }); // Set cookie to expire in 7 days

@@ -28,6 +28,9 @@ import {
 import { useAuth } from "@/providers/auth-provider";
 import { Loader } from "@/components/global/loader";
 import { useCreateGame } from "@/server/games/create-quiz";
+import { Game } from "@/types/game";
+import { useEffect } from "react";
+import { useUpdateGame } from "@/server/games/mutation";
 
 const optionSchema = z.object({
   text: z.string().min(1, "Option text is required"),
@@ -54,7 +57,12 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export const NewQuizGameForm = () => {
+interface NewQuizGameFormProps {
+  update?: boolean;
+  game?: Game;
+}
+
+export const NewQuizGameForm = ({ update, game }: NewQuizGameFormProps) => {
   const { user } = useAuth();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -82,14 +90,57 @@ export const NewQuizGameForm = () => {
   const isLoading = form.formState.isSubmitting;
 
   const createGame = useCreateGame();
+  const updateGame = useUpdateGame();
 
   const { fields, append } = useFieldArray({
     control: form.control,
     name: "gamePlay",
   });
 
+  useEffect(() => {
+    if (update && game) {
+      const formattedGame: FormValues = {
+        name: game.name,
+        description: game.description,
+        tutorial: game.tutorial,
+        image: game.image,
+        type: "quiz",
+        allowItemExchange: game.allowItemExchange,
+        gamePlay: Array.isArray(game.gamePlay)
+          ? game.gamePlay.map((q) => ({
+              text: q.text || "",
+              rewards: (q.rewards || 1).toString(),
+              options: Array.isArray(q.options)
+                ? q.options.map((o) => ({
+                    text: o.text || "",
+                    isAnswer: o.isAnswer || false,
+                  }))
+                : [
+                    { text: "", isAnswer: false },
+                    { text: "", isAnswer: false },
+                    { text: "", isAnswer: false },
+                    { text: "", isAnswer: false },
+                  ],
+            }))
+          : [
+              {
+                text: "",
+                rewards: "1",
+                options: [
+                  { text: "", isAnswer: false },
+                  { text: "", isAnswer: false },
+                  { text: "", isAnswer: false },
+                  { text: "", isAnswer: false },
+                ],
+              },
+            ],
+      };
+      form.reset(formattedGame);
+    }
+  }, [update, game, form]);
+
   const onSubmit = (data: FormValues) => {
-    const newGameData = {
+    const gameData = {
       ...data,
       brandId: user?.id!,
       gamePlay: data.gamePlay.map((question) => ({
@@ -97,8 +148,12 @@ export const NewQuizGameForm = () => {
         rewards: parseInt(question.rewards, 10),
       })),
     };
-    createGame.mutate(newGameData);
-    form.reset();
+
+    if (update && game) {
+      updateGame.mutate({ id: game.id, ...gameData });
+    } else {
+      createGame.mutate(gameData);
+    }
   };
 
   return (
@@ -118,7 +173,9 @@ export const NewQuizGameForm = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Create new game</BreadcrumbPage>
+            <BreadcrumbPage>
+              {update ? "Update Game" : "Create New Game"}
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -127,7 +184,9 @@ export const NewQuizGameForm = () => {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <Card className="w-full max-w-2xl mx-auto mt-8">
             <CardHeader>
-              <CardTitle>Create New Quiz Game</CardTitle>
+              <CardTitle>
+                {update ? "Update Quiz Game" : "Create New Quiz Game"}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -309,7 +368,7 @@ export const NewQuizGameForm = () => {
 
               <Button type="submit" disabled={isLoading}>
                 {isLoading && <Loader />}
-                Create Game
+                {update ? "Update Game" : "Create Game"}
               </Button>
             </CardContent>
           </Card>
