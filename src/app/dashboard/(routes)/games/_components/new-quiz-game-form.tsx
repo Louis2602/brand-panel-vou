@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useAuth } from "@/providers/auth-provider";
 import { Loader } from "@/components/global/loader";
-import { useCreateGame } from "@/server/games/create-quiz";
+import { useCreateGame } from "@/server/games/create";
 import { Game } from "@/types/game";
 import { useEffect } from "react";
 import { useUpdateGame } from "@/server/games/mutation";
@@ -113,7 +113,7 @@ export const NewQuizGameForm = ({ update, game }: NewQuizGameFormProps) => {
               text: q.text || "",
               rewards: (q.rewards || 1).toString(),
               options: Array.isArray(q.options)
-                ? q.options.map((o) => ({
+                ? q.options.map((o: any) => ({
                     text: o.text || "",
                     isAnswer: o.isAnswer || false,
                   }))

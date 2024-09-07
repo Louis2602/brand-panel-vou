@@ -18,7 +18,7 @@ const GameTypesListPage = () => {
       icon: "🧠",
     },
     {
-      id: "phone-shaking",
+      id: "shake",
       name: "Phone Shaking Game",
       description: "Shake your phone to complete challenges",
       icon: "📱",

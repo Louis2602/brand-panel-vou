@@ -1,13 +1,14 @@
 export type Game = {
   id?: string;
   name: string;
+  status?: string;
   description: string;
   tutorial: string;
   image: string;
   type: "quiz" | "shake";
   allowItemExchange: boolean;
   brandId: string;
-  gamePlay: Gameplay[];
+  gamePlay: Gameplay[] | any;
 };
 
 export type Gameplay = {

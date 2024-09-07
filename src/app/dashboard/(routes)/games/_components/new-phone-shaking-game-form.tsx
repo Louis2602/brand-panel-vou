@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,191 +8,227 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
+import { useAuth } from "@/providers/auth-provider";
+import { Game } from "@/types/game";
+import { useCreateGame } from "@/server/games/create";
 
-export const NewPhoneShakingGameForm = () => {
+interface NewShakeGameFormProps {
+  update?: boolean;
+  game?: Game;
+}
+
+const formSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  description: z.string().min(1, "Description is required"),
+  tutorial: z.string(),
+  image: z.string().url("Invalid image URL"),
+  type: z.literal("shake"),
+  allowItemExchange: z.boolean(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+export const NewShakeGameForm: React.FC<NewShakeGameFormProps> = ({
+  update,
+  game,
+}) => {
   const router = useRouter();
-  const [game, setGame] = useState({
-    name: "",
-    description: "",
-    tutorial: "",
-    image: "",
-    type: "phone-shaking",
-    allowItemExchange: false,
-    brandId: "",
-    difficulty: "medium",
-    duration: 30,
+  const { user } = useAuth();
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      tutorial: "",
+      image: "",
+      type: "shake",
+      allowItemExchange: false,
+    },
   });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setGame({ ...game, [name]: value });
+  const [gamePlay, setGamePlay] = useState<number[]>([0]);
+  const isLoading = form.formState.isSubmitting;
+  const createGame = useCreateGame();
+
+  useEffect(() => {
+    if (update && game) {
+      const formattedGame = {
+        name: game.name,
+        description: game.description,
+        tutorial: game.tutorial,
+        image: game.image,
+        allowItemExchange: game.allowItemExchange,
+      };
+      form.reset(formattedGame);
+      setGamePlay(Array.isArray(game.gamePlay) ? game.gamePlay : [0]);
+    }
+  }, [update, game, form]);
+
+  const addGameplayElement = () => {
+    setGamePlay((prev) => [...prev, 0]); // Allow multiple `0`s
   };
 
-  const handleCheckboxChange = (e) => {
-    setGame({ ...game, allowItemExchange: e.target.checked });
+  const removeGameplayElement = (index: number) => {
+    setGamePlay((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSelectChange = (name, value) => {
-    setGame({ ...game, [name]: value });
+  const handleGameplayChange = (index: number, value: number) => {
+    const updatedGamePlay = [...gamePlay];
+    updatedGamePlay[index] = value;
+    setGamePlay(updatedGamePlay);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Here you would typically send the game data to your backend
-    console.log(game);
-
-    // Simulating API call
+  const onSubmit = async (data: FormValues) => {
+    const gameData = {
+      ...data,
+      gamePlay,
+      brandId: user?.id!,
+    };
     try {
-      // const response = await fetch('your-api-endpoint', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(game),
-      // });
-      // if (response.ok) {
-      //   router.push('/dashboard/games/phone-shaking');
-      // }
-
-      // For now, just redirect
-      router.push("/dashboard/games/phone-shaking");
+      if (update && game) {
+        // updateGame.mutate({ id: game?.id!, updateGame: gameData });
+      } else {
+        createGame.mutate(gameData);
+      }
+      router.push("/dashboard/games/shake");
     } catch (error) {
-      console.error("Failed to create game:", error);
+      console.error("Failed to create/update game:", error);
     }
   };
 
   return (
     <div>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/main">Dashboard</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/games">All Games</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/games/quiz">
-              Phone Shaking
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Create new game</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       <Card className="w-full max-w-2xl mx-auto mt-8">
         <CardHeader>
-          <CardTitle>Create New Phone Shaking Game</CardTitle>
+          <CardTitle>
+            {update ? "Update Shake Game" : "Create New Shake Game"}
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
                 name="name"
-                value={game.name}
-                onChange={handleInputChange}
-                required
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div>
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
+              <FormField
+                control={form.control}
                 name="description"
-                value={game.description}
-                onChange={handleInputChange}
-                required
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div>
-              <Label htmlFor="tutorial">Tutorial</Label>
-              <Input
-                id="tutorial"
+              <FormField
+                control={form.control}
                 name="tutorial"
-                value={game.tutorial}
-                onChange={handleInputChange}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tutorial</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div>
-              <Label htmlFor="image">Image URL</Label>
-              <Input
-                id="image"
+              <FormField
+                control={form.control}
                 name="image"
-                value={game.image}
-                onChange={handleInputChange}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image URL</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div>
-              <Label htmlFor="brandId">Brand ID</Label>
-              <Input
-                id="brandId"
-                name="brandId"
-                value={game.brandId}
-                onChange={handleInputChange}
+              <FormField
+                control={form.control}
+                name="allowItemExchange"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>Allow Item Exchange</FormLabel>
+                    </div>
+                  </FormItem>
+                )}
               />
-            </div>
-            <div>
-              <Label htmlFor="difficulty">Difficulty</Label>
-              <Select
-                name="difficulty"
-                value={game.difficulty}
-                onValueChange={(value) =>
-                  handleSelectChange("difficulty", value)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select difficulty" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="easy">Easy</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="hard">Hard</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="duration">Duration (seconds)</Label>
-              <Input
-                id="duration"
-                name="duration"
-                type="number"
-                value={game.duration}
-                onChange={handleInputChange}
-                min="1"
-                required
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="allowItemExchange"
-                checked={game.allowItemExchange}
-                onCheckedChange={handleCheckboxChange}
-              />
-              <Label htmlFor="allowItemExchange">Allow Item Exchange</Label>
-            </div>
-            <Button type="submit">Create Game</Button>
-          </form>
+
+              {/* Handle Gameplay separately */}
+              <div>
+                <Label>Game Play</Label>
+                <div className="space-y-2">
+                  {gamePlay.map((value, index) => (
+                    <div key={index} className="flex items-center space-x-2">
+                      <Input
+                        type="number"
+                        value={value}
+                        onChange={(e) =>
+                          handleGameplayChange(index, parseInt(e.target.value))
+                        }
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        onClick={() => removeGameplayElement(index)}
+                      >
+                        Remove
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={addGameplayElement}
+                  >
+                    Add Gameplay Element
+                  </Button>
+                </div>
+              </div>
+
+              <Button type="submit" disabled={isLoading}>
+                {update ? "Update" : "Create"} Game
+              </Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>
   );
 };
+
+export default NewShakeGameForm;
