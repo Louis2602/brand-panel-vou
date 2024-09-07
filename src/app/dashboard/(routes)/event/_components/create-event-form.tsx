@@ -53,10 +53,10 @@ export const CreateEventForm = ({ update, event }: CreateEventFormProps) => {
       name: event?.name ?? "",
       gameId: (games && games[0]?.id!) ?? "",
       startTime: event?.startTime
-        ? new Date(event.startTime).toISOString().slice(0, -1) + "+07:00"
+        ? new Date(event.startTime).toISOString().slice(0, -1)
         : "",
       endTime: event?.endTime
-        ? new Date(event.endTime).toISOString().slice(0, -1) + "+07:00"
+        ? new Date(event.endTime).toISOString().slice(0, -1)
         : "",
     },
   });
@@ -113,17 +113,15 @@ export const CreateEventForm = ({ update, event }: CreateEventFormProps) => {
                     type="datetime-local"
                     {...field}
                     onChange={(e) => {
-                      const date = new Date(e.target.value);
-                      const formatted =
-                        date.toISOString().slice(0, -1) + "+07:00";
-                      field.onChange(formatted);
+                      const localDateTime = e.target.value;
+                      field.onChange(localDateTime); // Directly pass the datetime-local value
                     }}
-                    value={field.value ? field.value.slice(0, -6) : ""}
+                    value={field.value ? field.value.slice(0, 16) : ""}
                   />
                 </FormControl>
                 <FormDescription>
-                  Enter the start time in your local timezone. It will be
-                  converted to the required format.
+                  Enter the start time in your local timezone. It will be stored
+                  as you enter it.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -140,17 +138,15 @@ export const CreateEventForm = ({ update, event }: CreateEventFormProps) => {
                     type="datetime-local"
                     {...field}
                     onChange={(e) => {
-                      const date = new Date(e.target.value);
-                      const formatted =
-                        date.toISOString().slice(0, -1) + "+07:00";
-                      field.onChange(formatted);
+                      const localDateTime = e.target.value;
+                      field.onChange(localDateTime); // Directly pass the datetime-local value
                     }}
-                    value={field.value ? field.value.slice(0, -6) : ""}
+                    value={field.value ? field.value.slice(0, 16) : ""}
                   />
                 </FormControl>
                 <FormDescription>
-                  Enter the end time in your local timezone. It will be
-                  converted to the required format.
+                  Enter the end time in your local timezone. It will be stored
+                  as you enter it.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
