@@ -21,6 +21,7 @@ import {
 import { useGames } from "@/server/games/query";
 import { Loader } from "@/components/global/loader";
 import { Game } from "@/types/game";
+import { Badge } from "@/components/ui/badge";
 
 const QuizGamesListPage = () => {
   const { data: quizGames } = useGames("quiz");
@@ -50,7 +51,7 @@ const QuizGamesListPage = () => {
       </Breadcrumb>
 
       <div className="flex justify-between items-center my-6">
-        <h1 className="text-2xl font-bold">Quiz Games</h1>
+        <h1 className="text-2xl font-bold">Quiz Games ({quizGames.length})</h1>
         <Button onClick={() => router.push("/dashboard/games/quiz/create")}>
           Create New Quiz Game
         </Button>
@@ -70,6 +71,12 @@ const QuizGamesListPage = () => {
           {gamesArray.map((game: Game) => (
             <Card key={game.id} className="w-full">
               <CardHeader>
+                <Badge
+                  variant={game.status ? "success" : "destructive"}
+                  className="w-fit"
+                >
+                  {game.status ? "Active" : "Inactive"}
+                </Badge>
                 <CardTitle>{game.name}</CardTitle>
                 <CardDescription>{game.description}</CardDescription>
               </CardHeader>

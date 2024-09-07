@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 export const useGames = (type: string) => {
   const { user } = useAuth();
   return useQuery({
-    queryKey: ["games"],
+    queryKey: ["games", type],
     queryFn: () =>
       axiosInstance
         .get<Game[]>(`/games?brands=${user?.id}&type=${type}`)

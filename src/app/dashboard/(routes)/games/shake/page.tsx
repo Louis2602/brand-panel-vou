@@ -20,9 +20,11 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useGames } from "@/server/games/query";
 import { Loader } from "@/components/global/loader";
+import { Badge } from "@/components/ui/badge";
 
 const PhoneShakingGamesListPage = () => {
   const { data: phoneShakingGames } = useGames("shake");
+  console.log(phoneShakingGames);
   const router = useRouter();
 
   if (phoneShakingGames === undefined) {
@@ -42,17 +44,17 @@ const PhoneShakingGamesListPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/games/quiz">
+            <BreadcrumbLink href="/dashboard/games/shake">
               Phone-shaking
             </BreadcrumbLink>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <div className="flex justify-between items-center my-6">
-        <h1 className="text-2xl font-bold">Phone Shaking Games</h1>
-        <Button
-          onClick={() => router.push("/dashboard/games/phone-shaking/create")}
-        >
+        <h1 className="text-2xl font-bold">
+          Phone Shaking Games ({phoneShakingGames.length})
+        </h1>
+        <Button onClick={() => router.push("/dashboard/games/shake/create")}>
           Create New Phone Shaking Game
         </Button>
       </div>
@@ -64,9 +66,7 @@ const PhoneShakingGamesListPage = () => {
               No phone shaking games have been created yet.
             </p>
             <Button
-              onClick={() =>
-                router.push("/dashboard/games/phone-shaking/create")
-              }
+              onClick={() => router.push("/dashboard/games/shake/create")}
             >
               Create Your First Phone Shaking Game
             </Button>
@@ -77,21 +77,25 @@ const PhoneShakingGamesListPage = () => {
           {phoneShakingGames.map((game) => (
             <Card key={game.id} className="w-full">
               <CardHeader>
+                <Badge
+                  variant={game.status ? "success" : "destructive"}
+                  className="w-fit"
+                >
+                  {game.status ? "Active" : "Inactive"}
+                </Badge>
                 <CardTitle>{game.name}</CardTitle>
                 <CardDescription>{game.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <p>Difficulty: {game.difficulty}</p>
-                <p>Duration: {game.duration} seconds</p>
                 {game.allowItemExchange && (
                   <p className="text-sm text-green-600">Allows item exchange</p>
                 )}
               </CardContent>
               <CardFooter className="flex justify-between">
-                <Link href={`/dashboard/games/phone-shaking/${game.id}`}>
+                <Link href={`/dashboard/games/shake/${game.id}`}>
                   <Button variant="outline">View Game</Button>
                 </Link>
-                <Link href={`/dashboard/games/phone-shaking/${game.id}/edit`}>
+                <Link href={`/dashboard/games/shake/${game.id}/edit`}>
                   <Button variant="outline">Edit Game</Button>
                 </Link>
               </CardFooter>

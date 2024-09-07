@@ -12,18 +12,17 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Badge } from "@/components/ui/badge";
-import { Gameplay } from "@/types/game";
 
-interface QuizGameIdPageProps {
+interface ShakeGameIdPageProps {
   params: {
     gameId: string;
   };
 }
 
-const QuizGameIdPage = ({ params: { gameId } }: QuizGameIdPageProps) => {
+const ShakeGameIdPage = ({ params: { gameId } }: ShakeGameIdPageProps) => {
   const { data: game } = useGame(gameId);
 
-  if (game === undefined || !game) {
+  if (!game) {
     return <Loader />;
   }
 
@@ -40,7 +39,7 @@ const QuizGameIdPage = ({ params: { gameId } }: QuizGameIdPageProps) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/games/quiz">Quiz</BreadcrumbLink>
+            <BreadcrumbLink href="/dashboard/games/shake">Shake</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -65,31 +64,24 @@ const QuizGameIdPage = ({ params: { gameId } }: QuizGameIdPageProps) => {
             <Image src={game.image} alt={game.name} width={400} height={300} />
           </div>
         )}
-        <h2 className="text-xl font-semibold mb-2">Questions:</h2>
-        <ul>
-          {game.gamePlay &&
-            game.gamePlay.map((question: Gameplay) => (
-              <li key={question.text} className="mb-4">
-                <p className="font-medium">{question.text}</p>
-                <p className="text-sm text-gray-600">
-                  Rewards: {question.rewards}
-                </p>
-                <ul className="list-disc list-inside">
-                  {question.options.map((option, optionIndex) => (
-                    <li
-                      key={optionIndex}
-                      className={option.isAnswer ? "text-green-600" : ""}
-                    >
-                      {option.text} {option.isAnswer && "(Correct Answer)"}
-                    </li>
-                  ))}
-                </ul>
-              </li>
+        <h2 className="text-xl font-semibold mb-2">Gameplay Elements:</h2>
+        {game.gamePlay && game.gamePlay.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {game.gamePlay.map((element: number, index: number) => (
+              <div
+                key={index}
+                className="border border-gray-300 p-4 rounded-lg shadow-sm flex items-center justify-center"
+              >
+                <span className="text-lg font-medium">{element}</span>
+              </div>
             ))}
-        </ul>
+          </div>
+        ) : (
+          <p>No gameplay elements available.</p>
+        )}
       </div>
     </div>
   );
 };
 
-export default QuizGameIdPage;
+export default ShakeGameIdPage;
