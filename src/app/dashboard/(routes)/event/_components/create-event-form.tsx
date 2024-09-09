@@ -25,6 +25,7 @@ import { useCreateEvent, useUpdateEvent } from "@/server/event/mutation";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { useGames } from "@/server/games/query";
+import { formatISO, parseISO } from "date-fns";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -42,7 +43,7 @@ interface CreateEventFormProps {
 
 export const CreateEventForm = ({ update, event }: CreateEventFormProps) => {
   const { user } = useAuth();
-  const { data: games } = useGames("quiz");
+  const { data: games } = useGames("all");
   const [imageUrl, setImageUrl] = useState<string>("");
   const createEvent = useCreateEvent();
   const updateEvent = useUpdateEvent();
@@ -114,19 +115,25 @@ export const CreateEventForm = ({ update, event }: CreateEventFormProps) => {
                     {...field}
                     onChange={(e) => {
                       const localDateTime = e.target.value;
-                      field.onChange(localDateTime); // Directly pass the datetime-local value
+                      const parsedDate = new Date(localDateTime);
+                      parsedDate.setSeconds(parsedDate.getSeconds() + 1);
+                      const isoStringWithTimezone = formatISO(parsedDate, {
+                        representation: "complete",
+                      });
+                      field.onChange(isoStringWithTimezone); // Pass ISO with timezone
                     }}
                     value={field.value ? field.value.slice(0, 16) : ""}
                   />
                 </FormControl>
                 <FormDescription>
                   Enter the start time in your local timezone. It will be stored
-                  as you enter it.
+                  with the timezone.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="endTime"
@@ -139,14 +146,18 @@ export const CreateEventForm = ({ update, event }: CreateEventFormProps) => {
                     {...field}
                     onChange={(e) => {
                       const localDateTime = e.target.value;
-                      field.onChange(localDateTime); // Directly pass the datetime-local value
+                      const parsedDate = new Date(localDateTime);
+                      const isoStringWithTimezone = formatISO(parsedDate, {
+                        representation: "complete",
+                      });
+                      field.onChange(isoStringWithTimezone); // Pass ISO with timezone
                     }}
                     value={field.value ? field.value.slice(0, 16) : ""}
                   />
                 </FormControl>
                 <FormDescription>
                   Enter the end time in your local timezone. It will be stored
-                  as you enter it.
+                  with the timezone.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
